@@ -240,7 +240,7 @@ const App: React.FC = () => {
             <button
               onClick={isCameraOpen ? closeCamera : openCamera}
               disabled={!apiKeyOk || isLoading}
-              aria-pressed={isCameraOpen}
+              aria-pressed={isCameraOpen ? "true" : "false"}
               className={`w-full flex items-center justify-center font-bold py-3 px-4 rounded-lg transition duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
                 isCameraOpen 
                 ? 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500' 
