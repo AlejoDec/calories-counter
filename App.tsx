@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { FoodCalorieInfo } from './types';
 import { analyzeImageForCalories } from './services/geminiService';
@@ -75,11 +74,16 @@ const App: React.FC = () => {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        streamRef.current = stream; 
-        setIsCameraOpen(true);
-      }
+      streamRef.current = stream; // <-- Asigna el stream primero
+      setIsCameraOpen(true);      // <-- Abre la cámara antes de asignar el srcObject
+
+      // Espera a que el videoRef esté disponible y asigna el stream
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = streamRef.current;
+          videoRef.current.play();
+        }
+      }, 100);
     } catch (err) {
       console.error("Error accessing camera:", err);
       if (err instanceof Error) {
@@ -154,6 +158,13 @@ const App: React.FC = () => {
     try {
       const { base64, mimeType } = await fileToBase64(imageFile);
       const calorieData = await analyzeImageForCalories(base64, mimeType);
+      // Si no se detecta comida, muestra el mensaje solicitado
+      if (!calorieData || calorieData.length === 0) {
+        setError("Please upload a photo of a meal.");
+        setResults([]);
+        setTotalCalories(0);
+        return;
+      }
       setResults(calorieData);
       const sumCalories = calorieData.reduce((acc, item) => acc + (item.caloriesPerItem * item.quantity), 0);
       setTotalCalories(sumCalories);
@@ -188,6 +199,18 @@ const App: React.FC = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    // Cuando la cámara está abierta y hay stream, asigna el stream al videoRef
+    if (isCameraOpen && videoRef.current && streamRef.current) {
+      videoRef.current.srcObject = streamRef.current;
+      videoRef.current.play();
+    }
+    // Limpieza opcional: cuando se cierra la cámara, limpia el srcObject
+    if (!isCameraOpen && videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  }, [isCameraOpen]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 text-gray-800 flex flex-col items-center p-4 sm:p-8">
@@ -240,7 +263,7 @@ const App: React.FC = () => {
             <button
               onClick={isCameraOpen ? closeCamera : openCamera}
               disabled={!apiKeyOk || isLoading}
-              aria-pressed={isCameraOpen ? "true" : "false"}
+              aria-pressed={isCameraOpen}
               className={`w-full flex items-center justify-center font-bold py-3 px-4 rounded-lg transition duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
                 isCameraOpen 
                 ? 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500' 
@@ -269,14 +292,25 @@ const App: React.FC = () => {
 
             {isCameraOpen && (
               <div className="space-y-4 mt-4 border-2 border-dashed border-gray-300 rounded-lg p-2">
+                {/* Vista previa de la cámara */}
                 <video 
                   ref={videoRef} 
                   autoPlay 
-                  playsInline 
-                  muted // Good practice for autoplay
+                  playsInline
+                  muted
+                  style={{ width: '100%', maxHeight: '320px', objectFit: 'contain', background: '#222' }}
                   className="w-full h-auto max-h-72 object-contain rounded-md bg-gray-800" 
                   aria-label="Live camera feed"
-                />
+                >
+                  {/* Mensaje alternativo si el navegador no soporta video */}
+                  Tu navegador no soporta la vista previa de la cámara.
+                </video>
+                {/* Mensaje si el video no está disponible */}
+                {!streamRef.current && (
+                  <div className="text-center text-gray-500 text-sm">
+                    Waiting for camera preview...
+                  </div>
+                )}
                 <button
                   onClick={handleTakePhoto}
                   disabled={isLoading || !isCameraOpen}
@@ -357,7 +391,7 @@ const App: React.FC = () => {
       </main>
 
       <footer className="w-full max-w-4xl mt-12 text-center text-sm text-gray-500">
-        <p>&copy; {new Date().getFullYear()} AI Calorie Counter. Powered by Gemini.</p>
+        <p>&copy; {new Date().getFullYear()} AI Calorie Counter. By Alejandro Hurtado <a href="https://github.com/alejodec" target='_blank' rel="noopener">AlejoDec</a></p>
         <p>Calorie estimates are for informational purposes only and may not be 100% accurate.</p>
       </footer>
     </div>
