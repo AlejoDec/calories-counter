@@ -27,6 +27,9 @@ importers:
       '@types/react':
         specifier: ^19.1.8
         version: 19.1.8
+      '@types/react-dom':
+        specifier: ^19.1.6
+        version: 19.1.6(@types/react@19.1.8)
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -40,7 +43,7 @@ importers:
         specifier: ~5.7.2
         version: 5.7.3
       vite:
-        specifier: ^6.2.0
+        specifier: ^6.3.5
         version: 6.3.5(@types/node@22.15.32)
 
 packages:
@@ -309,6 +312,11 @@ packages:
 
   '@types/node@22.15.32':
     resolution: {integrity: sha512-3jigKqgSjsH6gYZv2nEsqdXfZqIFGAV36XYYjf9KGZ3PSG+IhLecqPnI310RvjutyMwifE2hhhNEklOUrvx/wA==}
+
+  '@types/react-dom@19.1.6':
+    resolution: {integrity: sha512-4hOiT/dwO8Ko0gV1m/TJZYk3y0KBnY9vzDh7W+DH17b2HFSOGgdj33dhihPeuy3l0q23+4e+hoXHV6hCC4dCXw==}
+    peerDependencies:
+      '@types/react': ^19.0.0
 
   '@types/react@19.1.8':
     resolution: {integrity: sha512-AwAfQ2Wa5bCx9WP8nZL2uMZWod7J7/JSplxbTmBQ5ms6QpqNYm672H0Vu9ZVKVngQ+ii4R/byguVEUZQyeg44g==}
@@ -739,6 +747,10 @@ snapshots:
   '@types/node@22.15.32':
     dependencies:
       undici-types: 6.21.0
+
+  '@types/react-dom@19.1.6(@types/react@19.1.8)':
+    dependencies:
+      '@types/react': 19.1.8
 
   '@types/react@19.1.8':
     dependencies:
