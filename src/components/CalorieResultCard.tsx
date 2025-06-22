@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FoodCalorieInfo } from '../types';
+import { FoodCalorieInfo } from '../../types';
 
 interface CalorieResultCardProps {
   item: FoodCalorieInfo;

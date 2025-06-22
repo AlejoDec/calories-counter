@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { FoodCalorieInfo } from './types';
-import { analyzeImageForCalories } from './services/geminiService';
-import LoadingSpinner from './src/components/LoadingSpinner';
-import CalorieResultCard from './src/components/CalorieResultCard';
+import { FoodCalorieInfo } from '../../types';
+import { analyzeImageForCalories } from '../../services/geminiService';
+import LoadingSpinner from '../components/LoadingSpinner';
+import CalorieResultCard from '../components/CalorieResultCard';
+import { useNavigate } from 'react-router-dom';
 
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
@@ -18,6 +19,7 @@ const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }>
 };
 
 const CaloriesCounter: React.FC = () => {
+  const navigate = useNavigate();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [results, setResults] = useState<FoodCalorieInfo[]>([]);
@@ -385,6 +387,19 @@ const CaloriesCounter: React.FC = () => {
             )}
             {/* If error occurred during analysis, it will be shown in the input section error display */}
           </div>
+        </div>
+        <div className="flex justify-end mt-8">
+          <button
+            onClick={() => {
+              // Example sign out logic: clear localStorage and reload
+              localStorage.clear();
+              navigate('/'); // Redirect to home or login page
+            }}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+            aria-label="Sign out"
+          >
+            Sign Out
+          </button>
         </div>
       </main>
 
