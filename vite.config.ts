@@ -16,6 +16,6 @@ export default defineConfig(({ mode }) => {
       },
       plugins: [
         tailwindcss()
-      ]
+      ],
     };
 });

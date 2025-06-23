@@ -50,6 +50,8 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-[#161b22] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <h1 className="text-center text-white font-bold mb-8 text-6xl">Bienvendio al contador de calorias por medio de IA</h1>
+    <p className="text-center text-white mb-6">Tienes que iniciar sesion o crear cuenta para poder usar la aplicacion, el unico motivo de esto es llevar conteo de uso :)</p>
       {view === "login" ? (
         <LoginForm
           onSubmit={handleLogin}
