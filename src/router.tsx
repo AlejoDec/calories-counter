@@ -5,25 +5,30 @@ import { AuthProvider } from "./context/AuthContext";
 import React from "react";
 
 // PrivateRoute como componente de Route
-const PrivateRoute = ({ element }: { element: React.ReactElement }) => {
-  const token = localStorage.getItem("jwt");
-  const location = useLocation();
-  if (token) {
-    return element;
-  }
-  return <Navigate to="/" replace state={{ from: location }} />;
-};
+// const PrivateRoute = ({ element }: { element: React.ReactElement }) => {
+//   const token = localStorage.getItem("jwt");
+//   const location = useLocation();
+//   if (token) {
+//     return element;
+//   }
+//   return <Navigate to="/" replace state={{ from: location }} />;
+// };
 
 const Router: React.FC = () => (
   <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<AuthPage />} />
+        <Route 
+          path="/login" 
+          element={<AuthPage />} 
+        />
         <Route
-          path="/app"
-          element={
-            <PrivateRoute element={<CaloriesCounter />} />
-          }
+          path="/"
+          element={ <CaloriesCounter /> }
+        />
+        <Route 
+          path='*'
+          element={<Navigate to="/" replace />}
         />
       </Routes>
     </BrowserRouter>
