@@ -19,12 +19,16 @@ const Router: React.FC = () => (
     <BrowserRouter>
       <Routes>
         <Route 
-          path="/" 
+          path="/login" 
           element={<AuthPage />} 
         />
         <Route
-          path="/app"
+          path="/"
           element={ <CaloriesCounter /> }
+        />
+        <Route 
+          path='*'
+          element={<Navigate to="/" replace />}
         />
       </Routes>
     </BrowserRouter>
