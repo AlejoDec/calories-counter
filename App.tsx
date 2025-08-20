@@ -3,6 +3,7 @@ import { FoodCalorieInfo } from './types';
 import { analyzeImageForCalories } from './services/geminiService';
 import LoadingSpinner from './src/components/loading/LoadingSpinner';
 import CalorieResultCard from './src/components/cards/CalorieResultCard';
+import UpdtCard from './src/components/cards/UpdtCards';
 
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
@@ -16,6 +17,14 @@ const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }>
     reader.onerror = (error) => reject(error);
   });
 };
+
+const Updates = [
+  {
+    title: "New Feature: New Account to manage your calories goal",
+    content: "User can now create a new account to manage their calories goal.",
+    complete: false
+  }
+]
 
 const CaloriesCounter: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
