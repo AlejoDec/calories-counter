@@ -2,14 +2,15 @@
 import { GoogleGenAI, GenerateContentResponse, Part } from "@google/genai";
 import { FoodCalorieInfo } from '../types';
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.VITE_GEMINI_API_KEY;
+const MODEL_NAME = process.env.VITE_GEMINI_MODEL;
 
 if (!API_KEY) {
   console.warn("API_KEY environment variable not found. Gemini API calls will fail.");
 }
 
 const ai = new GoogleGenAI({ apiKey: API_KEY || "MISSING_API_KEY" });
-const model = 'gemini-2.5-flash-preview-04-17';
+const model: string = MODEL_NAME || "gemini-2.0-flash";
 
 const PROMPT = `Analyze the food items in this image. Identify distinct food items. If you see multiple identical instances of a food item (e.g., two identical tacos, three of the same cookies), group them. For each food item or group of identical items, provide:
 1. 'foodItem' (string): The name of the food.

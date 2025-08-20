@@ -1,8 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
-import CaloriesCounter from "./views/CaloriesCounter";
-import AuthPage from "./views/AuthPages";
-import { AuthProvider } from "./context/AuthContext";
 import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+
+import AuthPage from "./views/AuthPages";
+import CaloriesCounter from "./views/CaloriesCounter";
+import Client from "./views/ClientView";
 
 // PrivateRoute como componente de Route
 // const PrivateRoute = ({ element }: { element: React.ReactElement }) => {
@@ -19,12 +21,16 @@ const Router: React.FC = () => (
     <BrowserRouter>
       <Routes>
         <Route 
-          path="/login" 
+          path="/auth" 
           element={<AuthPage />} 
         />
         <Route
           path="/"
           element={ <CaloriesCounter /> }
+        />
+        <Route
+          path="/app"
+          element={<Client />}
         />
         <Route 
           path='*'

@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import LoginForm from "../components/LoginForm";
-import RegisterForm from "../components/RegisterForm";
+import LoginForm from "../components/forms/LoginForm";
+import RegisterForm from "../components/forms/RegisterForm";
 import { auth } from "../firebaseConfig";
 import { AuthContext } from "../context/AuthContext"; // Adjust the path as needed
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
@@ -65,7 +65,7 @@ const AuthPage = () => {
           error={registerError}
         />
       )}
-      <div className="mt-6 text-center">
+      <div className="mt-6 text-center flex flex-col items-center">
         <button
           onClick={() => setView(view === "login" ? "register" : "login")}
           className="text-blue-500 hover:text-blue-700 focus:outline-none"
@@ -73,6 +73,9 @@ const AuthPage = () => {
           {view === "login"
             ? "Don't have an account? Sign up"
             : "Already have an account? Log in"}
+        </button>
+        <button onClick={() => navigate("/")} className="text-blue-500 hover:text-blue-700 focus:outline-none mt-4">
+          <p>Back to calories-counter</p>
         </button>
         {
             loginError && (

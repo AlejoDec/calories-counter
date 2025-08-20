@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { FoodCalorieInfo } from './types';
 import { analyzeImageForCalories } from './services/geminiService';
-import LoadingSpinner from './src/components/LoadingSpinner';
-import CalorieResultCard from './src/components/CalorieResultCard';
+import LoadingSpinner from './src/components/loading/LoadingSpinner';
+import CalorieResultCard from './src/components/cards/CalorieResultCard';
 
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
@@ -31,9 +31,9 @@ const CaloriesCounter: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    // Check for API_KEY presence on mount
-    if (!process.env.API_KEY) {
-      setError("CRITICAL: API_KEY environment variable is not set. This application cannot function without it. Please configure the API_KEY.");
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+      setError("CRITICAL: Missing VITE_GEMINI_API_KEY. Define it in your .env file.");
       setApiKeyOk(false);
     }
   }, []);
@@ -158,7 +158,6 @@ const CaloriesCounter: React.FC = () => {
     try {
       const { base64, mimeType } = await fileToBase64(imageFile);
       const calorieData = await analyzeImageForCalories(base64, mimeType);
-      // Si no se detecta comida, muestra el mensaje solicitado
       if (!calorieData || calorieData.length === 0) {
         setError("Please upload a photo of a meal.");
         setResults([]);
@@ -168,11 +167,15 @@ const CaloriesCounter: React.FC = () => {
       setResults(calorieData);
       const sumCalories = calorieData.reduce((acc, item) => acc + (item.caloriesPerItem * item.quantity), 0);
       setTotalCalories(sumCalories);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+    } catch (err: any) {
+      const msg = typeof err?.message === 'string' ? err.message : '';
+      if (msg.includes('"NOT_FOUND"') || msg.includes("Model not found") || msg.includes("is not found")) {
+        setError(
+          `Model not found or unsupported. Current model: '${import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'}'. ` +
+          "Set VITE_GEMINI_MODEL to a valid one (e.g. gemini-2.0-flash, gemini-2.0-pro, gemini-1.5-flash). Then restart dev server."
+        );
       } else {
-        setError("An unknown error occurred during analysis.");
+        setError(msg || "An unknown error occurred during analysis.");
       }
       console.error(err);
     } finally {
