@@ -3,7 +3,8 @@ import { FoodCalorieInfo } from './types';
 import { analyzeImageForCalories } from './services/geminiService';
 import LoadingSpinner from './src/components/loading/LoadingSpinner';
 import CalorieResultCard from './src/components/cards/CalorieResultCard';
-import UpdtCard from './src/components/cards/UpdtCards';
+// import UpdtCard from './src/components/cards/UpdtCards';
+import { Analytics } from "@vercel/analytics/next";
 
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
@@ -225,6 +226,7 @@ const CaloriesCounter: React.FC = () => {
   }, [isCameraOpen]);
 
   return (
+    <Analytics>
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 text-gray-800 flex flex-col items-center p-4 sm:p-8">
       <header className="w-full max-w-4xl mb-8 text-center">
         <h1 className="text-4xl sm:text-5xl font-bold text-green-700 drop-shadow-md">
@@ -405,6 +407,7 @@ const CaloriesCounter: React.FC = () => {
         <p>Calorie estimates are for informational purposes only and may not be 100% accurate.</p>
       </footer>
     </div>
+    </Analytics>
   );
 };
 
