@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import LoginForm from "../components/LoginForm";
-import RegisterForm from "../components/RegisterForm";
+import LoginForm from "../components/forms/LoginForm";
+import RegisterForm from "../components/forms/RegisterForm";
 import { auth } from "../firebaseConfig";
 import { AuthContext } from "../context/AuthContext"; // Adjust the path as needed
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
@@ -50,6 +50,8 @@ const AuthPage = () => {
 
   return (
     <div className="min-h-screen bg-[#161b22] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <h1 className="text-center text-white font-bold mb-8 text-6xl">Bienvendio al contador de calorias por medio de IA</h1>
+    <p className="text-center text-white mb-6">Tienes que iniciar sesion o crear cuenta para poder usar la aplicacion, el unico motivo de esto es llevar conteo de uso :)</p>
       {view === "login" ? (
         <LoginForm
           onSubmit={handleLogin}
@@ -63,7 +65,7 @@ const AuthPage = () => {
           error={registerError}
         />
       )}
-      <div className="mt-6 text-center">
+      <div className="mt-6 text-center flex flex-col items-center">
         <button
           onClick={() => setView(view === "login" ? "register" : "login")}
           className="text-blue-500 hover:text-blue-700 focus:outline-none"
@@ -71,6 +73,9 @@ const AuthPage = () => {
           {view === "login"
             ? "Don't have an account? Sign up"
             : "Already have an account? Log in"}
+        </button>
+        <button onClick={() => navigate("/")} className="text-blue-500 hover:text-blue-700 focus:outline-none mt-4">
+          <p>Back to calories-counter</p>
         </button>
         {
             loginError && (

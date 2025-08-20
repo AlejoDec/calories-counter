@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { FoodCalorieInfo } from '../../types';
 import { analyzeImageForCalories } from '../../services/geminiService';
-import LoadingSpinner from '../components/LoadingSpinner';
-import CalorieResultCard from '../components/CalorieResultCard';
+import LoadingSpinner from '../components/loading/LoadingSpinner';
+import CalorieResultCard from '../components/cards/CalorieResultCard';
 import { useNavigate } from 'react-router-dom';
+import IconAccount from '../components/account/IconAccount';
 
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
@@ -33,9 +34,9 @@ const CaloriesCounter: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    // Check for API_KEY presence on mount
-    if (!process.env.API_KEY) {
-      setError("CRITICAL: API_KEY environment variable is not set. This application cannot function without it. Please configure the API_KEY.");
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+      setError("CRITICAL: Missing VITE_GEMINI_API_KEY. Define it in your .env file.");
       setApiKeyOk(false);
     }
   }, []);
@@ -160,7 +161,6 @@ const CaloriesCounter: React.FC = () => {
     try {
       const { base64, mimeType } = await fileToBase64(imageFile);
       const calorieData = await analyzeImageForCalories(base64, mimeType);
-      // Si no se detecta comida, muestra el mensaje solicitado
       if (!calorieData || calorieData.length === 0) {
         setError("Please upload a photo of a meal.");
         setResults([]);
@@ -170,11 +170,15 @@ const CaloriesCounter: React.FC = () => {
       setResults(calorieData);
       const sumCalories = calorieData.reduce((acc, item) => acc + (item.caloriesPerItem * item.quantity), 0);
       setTotalCalories(sumCalories);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+    } catch (err: any) {
+      const msg = typeof err?.message === 'string' ? err.message : '';
+      if (msg.includes('"NOT_FOUND"') || msg.includes("Model not found") || msg.includes("is not found")) {
+        setError(
+          `Model not found or unsupported. Current model: '${import.meta.env.VITE_GEMINI_MODEL || 'gemini-2.0-flash'}'. ` +
+          "Set VITE_GEMINI_MODEL to a valid one (e.g. gemini-2.0-flash, gemini-2.0-pro, gemini-1.5-flash). Then restart dev server."
+        );
       } else {
-        setError("An unknown error occurred during analysis.");
+        setError(msg || "An unknown error occurred during analysis.");
       }
       console.error(err);
     } finally {
@@ -231,6 +235,27 @@ const CaloriesCounter: React.FC = () => {
           <p>{error}</p>
         </div>
       )}
+
+      {
+        localStorage.getItem('jwt') ?
+          <div className="w-full max-w-4xl mb-6 flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <IconAccount />
+              <span className="text-lg font-semibold text-green-700">Welcome, User!</span>
+            </div>
+          </div>
+          :
+          <div className="w-full max-w-4xl mb-6 text-start text-gray-500">
+            <p>Please sign in to use the calorie counter features.</p>
+            <button 
+              onClick={() => navigate('/auth')}
+              className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+              aria-label="Sign in to access features"
+            >
+              Sign In
+            </button>
+          </div>
+      }
       
       <main className="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 sm:p-10">
         <div className="grid md:grid-cols-2 gap-8 items-start">
@@ -388,23 +413,27 @@ const CaloriesCounter: React.FC = () => {
             {/* If error occurred during analysis, it will be shown in the input section error display */}
           </div>
         </div>
-        <div className="flex justify-end mt-8">
-          <button
-            onClick={() => {
-              // Example sign out logic: clear localStorage and reload
-              localStorage.clear();
-              navigate('/'); // Redirect to home or login page
-            }}
-            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
-            aria-label="Sign out"
-          >
-            Sign Out
-          </button>
-        </div>
+        { localStorage.getItem('jwt') ?
+          <div className="flex justify-end mt-8">
+            <button
+              onClick={() => {
+                // Example sign out logic: clear localStorage and reload
+                localStorage.clear();
+                navigate('/'); // Redirect to home or login page
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50"
+              aria-label="Sign out"
+            >
+              Sign Out
+            </button>
+          </div>
+          :
+          <div></div>
+        }
       </main>
 
       <footer className="w-full max-w-4xl mt-12 text-center text-sm text-gray-500">
-        <p>&copy; {new Date().getFullYear()} AI Calorie Counter. By Alejandro Hurtado <a href="https://github.com/alejodec" target='_blank' rel="noopener">AlejoDec</a></p>
+        <p>&copy; {new Date().getFullYear()} AI Calorie Counter. By Alejandro Hurtado <a href="https://github.com/alejodec" target='_blank' rel="noopener" className='font-bold'>AlejoDec</a></p>
         <p>Calorie estimates are for informational purposes only and may not be 100% accurate.</p>
       </footer>
     </div>
