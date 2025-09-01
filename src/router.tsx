@@ -4,6 +4,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 import AuthPage from "./views/AuthPages";
 import CaloriesCounter from "./views/CaloriesCounter";
+import Presentation from "./views/Presentation";
 // import Client from "./views/ClientView";
 
 // PrivateRoute como componente de Route
@@ -31,6 +32,10 @@ const Router: React.FC = () => (
         <Route
           path="/app"
           element={<CaloriesCounter />}
+        />
+        <Route
+          path="/presentation"
+          element={<Presentation />}
         />
         <Route 
           path='*'
