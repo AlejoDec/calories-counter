@@ -227,14 +227,7 @@ const CaloriesCounter: React.FC = () => {
         <p className="text-lg text-green-600 mt-2">
           Upload an image or take a photo of your meal and let AI estimate the calories!
         </p>
-        <div className="mt-4 flex justify-center">
-          <button
-            onClick={() => navigate("/presentation")}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
-          >
-            Ver presentación
-          </button>
-        </div>
+        
       </header>
 
       {!apiKeyOk && error && ( // This error is specifically for API Key issue
@@ -438,9 +431,15 @@ const CaloriesCounter: React.FC = () => {
           :
           <div></div>
         }
-        Li
       </main>
-
+      <div className="mt-4 w-full flex justify-end">
+          <button
+            onClick={() => navigate("/presentation")}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+          >
+            Ver presentación
+          </button>
+        </div>
       <footer className="w-full max-w-4xl mt-12 text-center text-sm text-gray-500">
         <p>&copy; {new Date().getFullYear()} AI Calorie Counter. By Alejandro Hurtado <a href="https://github.com/alejodec" target='_blank' rel="noopener" className='font-bold'>AlejoDec</a></p>
         <p>Calorie estimates are for informational purposes only and may not be 100% accurate.</p>

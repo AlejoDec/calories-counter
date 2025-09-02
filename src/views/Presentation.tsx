@@ -1,9 +1,21 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Presentation: React.FC = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 px-4 py-8">
-    <div className="max-w-2xl w-full bg-white rounded-xl shadow-2xl p-8">
-      <h1 className="text-4xl font-bold text-green-700 mb-6 text-center">Nutricionista personal con IA</h1>
+const Presentation: React.FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 px-4 py-8">
+      <div className="w-full flex justify-start p-2">
+        <button 
+          onClick={() => navigate("/")}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+        >
+          Volver a la página principal
+        </button>
+      </div>
+      <div className="max-w-2xl w-full bg-white rounded-xl shadow-2xl p-8">
+        <h1 className="text-4xl font-bold text-green-700 mb-6 text-center">Nutricionista personal con IA</h1>
       <section className="mb-6">
         <h2 className="text-2xl font-semibold text-green-600 mb-2">Idea</h2>
         <p className="text-gray-800">Nutricionista personal con IA</p>
@@ -55,5 +67,6 @@ const Presentation: React.FC = () => (
     </div>
   </div>
 );
+}
 
 export default Presentation;
