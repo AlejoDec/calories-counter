@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "firebase/firestore";
 import { getApp } from "firebase/app";
 
-const ViewsCounter = (viewsCount: number) => {
-    const [views, setViews] = useState(viewsCount);
+const ViewsCounter = () => {
+    const [views, setViews] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -52,10 +52,10 @@ const ViewsCounter = (viewsCount: number) => {
             }
         };
 
-        document.addEventListener("DOMContentLoaded", handleVisibilityChange);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            document.removeEventListener("DOMContentLoaded", handleVisibilityChange);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
     }, []);
 
