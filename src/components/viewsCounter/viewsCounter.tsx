@@ -52,10 +52,10 @@ const ViewsCounter = () => {
             }
         };
 
-        document.addEventListener("visibilitychange", handleVisibilityChange);
+        document.addEventListener("DOMContentLoaded", handleVisibilityChange);
 
         return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            document.removeEventListener("DOMContentLoaded", handleVisibilityChange);
         };
     }, []);
 
