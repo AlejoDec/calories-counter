@@ -1,10 +1,14 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { FoodCalorieInfo } from '../../types';
+
 import { analyzeImageForCalories } from '../../services/geminiService';
+
 import LoadingSpinner from '../components/loading/LoadingSpinner';
 import CalorieResultCard from '../components/cards/CalorieResultCard';
-import { useNavigate } from 'react-router-dom';
 import IconAccount from '../components/account/IconAccount';
+import ViewsCounter from '../components/viewsCounter/viewsCounter';
 
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
@@ -224,6 +228,7 @@ const CaloriesCounter: React.FC = () => {
         <h1 className="text-4xl sm:text-5xl font-bold text-green-700 drop-shadow-md">
           AI Calorie Counter
         </h1>
+        <ViewsCounter />
         <p className="text-lg text-green-600 mt-2">
           Upload an image or take a photo of your meal and let AI estimate the calories!
         </p>
