@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "firebase/firestore";
 import { getApp } from "firebase/app";
 
-const ViewsCounter = () => {
-    const [views, setViews] = useState(0);
+const ViewsCounter = (viewsCount: number) => {
+    const [views, setViews] = useState(viewsCount);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {

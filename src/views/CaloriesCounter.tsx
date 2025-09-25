@@ -10,6 +10,14 @@ import CalorieResultCard from '../components/cards/CalorieResultCard';
 import IconAccount from '../components/account/IconAccount';
 import ViewsCounter from '../components/viewsCounter/viewsCounter';
 
+// Funciones generales
+const [views, setViews] = useState(0);
+
+// Funciones utiles
+document.addEventListener("DOMContentLoaded", function() {
+    setViews((prev) => prev + 1);
+})
+
 // Utility to convert file to base64
 const fileToBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
   return new Promise((resolve, reject) => {
@@ -228,11 +236,10 @@ const CaloriesCounter: React.FC = () => {
         <h1 className="text-4xl sm:text-5xl font-bold text-green-700 drop-shadow-md">
           AI Calorie Counter
         </h1>
-        <ViewsCounter />
+        <ViewsCounter {...views} />
         <p className="text-lg text-green-600 mt-2">
           Upload an image or take a photo of your meal and let AI estimate the calories!
         </p>
-        
       </header>
 
       {!apiKeyOk && error && ( // This error is specifically for API Key issue
